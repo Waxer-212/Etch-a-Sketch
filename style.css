@@ -82,11 +82,6 @@ body
     box-sizing: border-box;
 }
 
-.grid-item:hover
-{
-    background-color: #FF7043;
-}
-
 /* Controls */
 .controls
 {

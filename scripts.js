@@ -1,3 +1,4 @@
+//Getting the elements
 const gridContainer = document.querySelector('.grid-container');
 
 const resetButton = document.querySelector('.clear');
@@ -17,20 +18,22 @@ const hiddenDiv = document.querySelector('.hidden');
 let randomColor = false;
 let shadeColor = false;
 
-let paintColor = 'black';
+let paintColor = colorPicker.value;
 
+//Creating the grid
 function createGrid() {
 
+    //Getting the size of the grid
     const size = parseInt(sliderValue.value);
    
+    //Clearing the grid
     gridContainer.innerHTML = '';
     
+    //Setting the height and width of the grid items
     let height = (gridContainer.clientHeight - 13) / size;
     let width = (gridContainer.clientWidth - 7) / size;
-    
-    console.log(height*size, gridContainer.clientHeight);
-    console.log(width*size, gridContainer.clientWidth);
 
+    //Creating the grid items
     for(let i = 0; i < size*size; i++) {
  
             const gridItem = document.createElement('div');
@@ -41,12 +44,8 @@ function createGrid() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    createGrid();
-});
 
-window.addEventListener('resize', () => {
-    const gridItems = document.querySelectorAll('.grid-item');
+document.addEventListener('DOMContentLoaded', () => {
     createGrid();
 });
 
@@ -57,37 +56,45 @@ sliderValue.addEventListener('input', () => {
     createGrid();
 });
 
+//Adding event listeners to the buttons
 let menu = document.querySelector('.controls');
-
-
 menu.addEventListener('click', (event) => {
     let target = event.target;
     switch(target) {
+
         case resetButton:
             createGrid();
             break;
+
         case drawButton:
             paintColor = colorPicker.value;
             randomColor = false;
             shadeColor = false;
             break;
+
         case eraserButton:
             paintColor = 'white';
             randomColor = false;
             shadeColor = false;
             break;
+
         case selectButton:
             hiddenDiv.classList.toggle('hidden');
+            selectButton.classList.add('hidden');
             break;
+
         case rainbowButton:
             randomColor = true;
             shadeColor = false;
             hiddenDiv.classList.toggle('hidden');
+            selectButton.classList.remove('hidden');
             break;
+
         case shadeButton:
-            hiddenDiv.classList.toggle('hidden');
             shadeColor = true;
             randomColor = false;
+            hiddenDiv.classList.toggle('hidden');
+            selectButton.classList.remove('hidden');
             break;
     }
 });
@@ -96,19 +103,21 @@ gridContainer.addEventListener('mouseover', (event) => {
     let target = event.target;
     if(target.classList.contains('grid-item')) {
         if(randomColor) {
-            paintColor = getRanonColor();
+            paintColor = getRandomColor();
         }
-        else if(shadeColor) {
+        if(shadeColor) {
+            if(target.style.backgroundColor === null || target.style.backgroundColor === '') 
+                paintColor = '#f5f5f5';
+             else
+                paintColor = rgbToHex(target.style.backgroundColor);
+        
             paintColor = getShadeColor();
-        }
-        else if(paintColor === 'white') {
-            target.style.backgroundColor = paintColor;
         }
         target.style.backgroundColor = paintColor;
     }
 });
 
-function getRanonColor() {
+function getRandomColor() {
     
     let letters = '0123456789ABCDEF';
     let color = '#';
@@ -118,9 +127,34 @@ function getRanonColor() {
         return color;
 }
 
-function getShadeColor() {
+    function rgbToHex(rgb) {
+        let result = rgb.match(/\d+/g);
+        return "#" + ((1 << 24) + (parseInt(result[0]) << 16) + (parseInt(result[1]) << 8) + parseInt(result[2])).toString(16).slice(1).toUpperCase();
+    }
     
-}
+    function getShadeColor() {
+        let color = paintColor;
+        let usePound = false;
+
+        if (color[0] == "#") {
+            color = color.slice(1);
+            usePound = true;
+        }
+
+        let num = parseInt(color, 16);
+
+        let r = (num >> 16) - 25;
+        let g = ((num >> 8) & 0x00FF) - 25;
+        let b = (num & 0x0000FF) - 25;
+
+        if (r < 0) r = 0;
+        if (g < 0) g = 0;
+        if (b < 0) b = 0;
+
+        let newColor = (r << 16) | (g << 8) | b;
+        return (usePound ? "#" : "") + newColor.toString(16).padStart(6, '0');
+    }
+
 
 
 
