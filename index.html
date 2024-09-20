@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etch-a-sketch</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+
     <script src="scripts.js" defer></script>
 </head>
 <body>
@@ -12,8 +14,28 @@
         <h1>Etch-a-sketch</h1>
         <div class="grid-container"></div>
         <div class="controls">
-            <button id="reset">Reset</button>
-            <button id="normal">Normal</button>
+            <div class="select-mode">
+                <div class="hidden">
+                    <button class="rainbow">Rainbow</button>
+                    <button class="shade">Shade</button>
+                </div>
+                <button class="select">Select</button>
+
+            </div>
+            <div class="buttons-center">
+                <ul class="menu">
+                <li><button class="clear">Clear</button></li>
+                <li><button class="draw">Draw</button></li>
+                <li><button class="eraser">Eraser</button></li>
+                </ul>
+                <div class="slider-holder">
+                    <input type="range" min="1" max="64" value="16" class="slider">
+                    <p>Grid size : <span class="slider-span">16</span> x <span class="slider-span">16</span></p>
+                </div>
+            </div>
+            <div class="color-picker">
+                <input type="color" id="color-picker" value="#000000">
+            </div>
         </div>
     </div>
 </body>
